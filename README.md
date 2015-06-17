@@ -1,55 +1,47 @@
-# Sinatra Active Record Starter Kit
 
-This template provides a basic [Sinatra](http://www.sinatrarb.com/) application
-that includes:
+-- How would you return all the recipes in your database?
 
-- [Active Record](http://guides.rubyonrails.org/active_record_querying.html)
-using [sinatra-activerecord](https://github.com/janko-m/sinatra-activerecord)
-- [PostgreSQL](http://www.postgresql.org/) for a database
-- [Sinatra::Reloader](http://www.sinatrarb.com/contrib/reloader.html) to
-  automatically reload modified files during development
-- [RSpec](https://github.com/rspec/rspec) for unit testing
-- [Capybara](https://github.com/jnicklas/capybara) for acceptance testing
-- [Pry](https://github.com/pry/pry) for debugging
+all_recipes = Recipe.all
 
-## Getting Started
+-- How would you return all the comments in your database?
 
-```no-highlight
-# Clone down this template
-git clone git@github.com:LaunchAcademy/sinatra-activerecord-starter-kit.git <YOUR_APP_NAME>
+all_comments = Comment.all
 
-# Move into your app's directory
-cd <YOUR_APP_NAME>
+-- How would you return the most recent recipe posted in your database?
 
-# Install all the gems
-bundle install
+most_recent = Recipe.last
 
-# Remove the old git history and start your own
-rm -rf .git && git init && git add -A && git commit -m 'Initial commit'
-```
+-- How would you return all the comments of the most recent recipe in your database?
 
-### Configuring Your Database
+comments_on_most_recent = Comment.where(recipe_id: most_recent.id)
 
-This template is set up for using a PostgreSQL database. You will need to create a
-`config/database.yml`. There is an example at `config/database.example.yml`.
+or most_recent.comments
 
-Once you've created a `config/database.yml`, you can create your database with
-`rake db:create`.
+-- How would you return the most recent comment of all your comments?
 
-## Rake Tasks
+most_recent_comment = Comment.last
 
-This template uses the [sinatra-activerecord](https://github.com/janko-m/sinatra-activerecord)
-gem, which provides the following rails-like rake tasks:
+-- How would you return the recipe associated with the most recent comment in your database?
 
-```no-highlight
-rake db:create            # create the database from config/database.yml from the current Sinatra env
-rake db:create_migration  # create an ActiveRecord migration
-rake db:drop              # drops the data from config/database.yml from the current Sinatra env
-rake db:migrate           # migrate the database (use version with VERSION=n)
-rake db:rollback          # roll back the migration (use steps with STEP=n)
-rake db:schema:dump       # dump schema into file
-rake db:schema:load       # load schema into database
-rake db:seed              # load the seed data from db/seeds.rb
-rake db:setup             # create the database and load the schema
-rake db:test:prepare      # Prepare test database from development schema
-```
+most_recent_comment.recipe.name
+
+-- How would you return all comments that include the string brussels in them?
+
+brussels_recipes = Recipe.where('name LIKE?', '%brussels%')
+
+--
+
+sweet_brussels = Recipe.create(name: "Sweet brussels sprouts", body: "You eat them for dessert.")
+raw_brussels = Recipe.create(name: "Raw brussels sprouts", body: "You don't cook them.")
+boiled_brussels = Recipe.create(name: "Boiled brussels sprouts", body: "You boil them.")
+fried_brussels = Recipe.create(name: "Fried brussels sprouts", body: "You fry them.")
+pie = Recipe.create(name: "Cheesy poof pie", body: "You bake the cheesy poofs in a pie.")
+
+Comment.create(body: 'So sweet!', recipe_id: sweet_brussels.id)
+Comment.create(body: 'So gross!', recipe_id: sweet_brussels.id)
+Comment.create(body: 'I can't eat these.'', recipe_id: raw_brussels.id)
+Comment.create(body: 'They are bland.', recipe_id: boiled_brussels.id)
+Comment.create(body: 'They are healthy, I guess.', recipe_id: boiled_brussels.id)
+Comment.create(body: 'This way is good.', recipe_id: fried_brussels.id)
+Comment.create(body: 'They are like french fries.', recipe_id: fried_brussels.id)
+Comment.create(body: 'Hmmmmmmm.', recipe_id: pie.id)
